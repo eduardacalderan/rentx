@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(categoriesRoutes);
+app.use("/categories", categoriesRoutes);
 
 app.get("/", (req, res) => {
   return res.json({ message: "hello world" });
