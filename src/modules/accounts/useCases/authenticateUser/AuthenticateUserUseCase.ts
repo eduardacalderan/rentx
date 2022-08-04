@@ -1,5 +1,4 @@
-/* eslint-disable import/no-unresolved */
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
@@ -26,23 +25,24 @@ class AuthenticateUserUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute({ email, password }: IRequest) {
+  async execute({ email, password }: IRequest): Promise<IResponse> {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError("Email or password incorrect");
+      throw new AppError(`Email or password incorrect!`);
     }
 
-    const passwordMatch = await compare(password, user.password);
+    const user_password = await compare(password, user.password);
 
-    if (!passwordMatch) {
-      throw new AppError("Email or password incorrect");
+    if (!user_password) {
+      throw new AppError(`Email or password incorrect!`);
     }
 
-    const token = sign({}, "a7e071b3de48cec1dd24de6cbe6c7bf1", {
+    const token = sign({}, "87ac04bd0163720ee638600e831d548a", {
       subject: user.id,
-      expiresIn: "1d",
+      expiresIn: "24h",
     });
+
     const tokenReturn: IResponse = {
       token,
       user: {
