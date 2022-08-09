@@ -1,7 +1,5 @@
-import { ICreateCarDTO } from "@modules/cars/dtos/ICreateCarDTO";
-import { Car } from "@modules/cars/infra/typeorm/entities/Cars";
-import { Category } from "@modules/cars/infra/typeorm/entities/Category";
-
+import { ICreateCarDTO } from "../../dtos/ICreateCarDTO";
+import { Car } from "../../infra/typeorm/entities/Cars";
 import { ICarsRepository } from "../ICarsRepository";
 
 class CarsRepositoryInMemory implements ICarsRepository {
@@ -29,6 +27,10 @@ class CarsRepositoryInMemory implements ICarsRepository {
     });
 
     this.cars.push(car);
+  }
+
+  async findByLicensePlate(license_plate: string): Promise<Car> {
+    return this.cars.find(car => car.license_plate === license_plate);
   }
 }
 
